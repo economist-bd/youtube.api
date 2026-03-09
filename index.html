@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starline2.5 - Official Website</title>
+    <style>
+        /* কালার প্যালেট ও বেসিক ডিজাইন */
+        :root {
+            --primary-color: #ff0000;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* হেডার বা হিরো সেকশন */
+        header {
+            background-color: var(--card-bg);
+            padding: 50px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-bottom: 3px solid var(--primary-color);
+        }
+        .channel-logo {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 4px solid var(--primary-color);
+            margin-bottom: 15px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.2);
+        }
+        h1 { 
+            margin: 0; 
+            font-size: 2.8em; 
+            color: #222;
+        }
+        .channel-desc {
+            color: #666;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        /* সাবস্ক্রাইব বাটন */
+        .subscribe-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+        }
+        .subscribe-btn:hover { 
+            background-color: #cc0000; 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 0, 0, 0.4);
+        }
+
+        /* ভিডিও গ্রিড সেকশন */
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .section-title { 
+            text-align: center; 
+            font-size: 2em;
+            margin-bottom: 40px; 
+            color: #222;
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        /* ভিডিও কার্ড ডিজাইন */
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .video-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .video-thumbnail {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-bottom: 1px solid #eee;
+        }
+        .video-info { 
+            padding: 20px; 
+        }
+        .video-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 0;
+            line-height: 1.5;
+        }
+        .video-title a { 
+            color: var(--text-color); 
+            text-decoration: none; 
+            transition: color 0.2s;
+        }
+        .video-title a:hover { 
+            color: var(--primary-color); 
+        }
+        
+        /* ফুটার */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #222;
+            color: #fff;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="https://ui-avatars.com/api/?name=Star+Line&background=ff0000&color=fff&size=150" alt="Starline2.5 Logo" class="channel-logo">
+        <h1>Starline2.5</h1>
+        <p class="channel-desc">আমাদের ইউটিউব চ্যানেলের অফিসিয়াল ওয়েবসাইটে আপনাকে স্বাগতম</p>
+        <a href="https://www.youtube.com/@Starline2.5?sub_confirmation=1" target="_blank" class="subscribe-btn">এখনই সাবস্ক্রাইব করুন</a>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">আমাদের সর্বশেষ ভিডিওসমূহ</h2>
+        <div id="video-container" class="video-grid">
+            <h3 style="text-align: center; width: 100%; color: #666;">ভিডিও লোড হচ্ছে... দয়া করে অপেক্ষা করুন।</h3>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Starline2.5 | সর্বস্বত্ব সংরক্ষিত।</p>
+    </footer>
+
+    <script>
+        // আপনার Google Cloud থেকে পাওয়া API Key এখানে বসান
+        const API_KEY = 'YOUR_API_KEY_HERE';
+        
+        // Starline2.5 এর মূল Channel ID (UC... দিয়ে শুরু হয়) বের করে এখানে বসাতে হবে
+        const CHANNEL_ID = 'YOUR_CHANNEL_ID_HERE'; 
+        
+        // কোটা বাঁচানোর জন্য ক্যাশিং ভেরিয়েবল
+        const CACHE_KEY = 'starline_videos';
+        const CACHE_TIME_KEY = 'starline_videos_time';
+        const CACHE_DURATION = 6 * 60 * 60 * 1000; // ৬ ঘণ্টার জন্য ক্যাশ সেভ থাকবে
+
+        // স্ক্রিনে ভিডিও দেখানোর ফাংশন
+        function displayVideos(items) {
+            const container = document.getElementById('video-container');
+            container.innerHTML = ''; 
+
+            if (!items || items.length === 0) {
+                container.innerHTML = '<p style="text-align:center; width:100%;">দুঃখিত, কোনো ভিডিও পাওয়া যায়নি বা API Key সঠিকভাবে বসানো হয়নি।</p>';
+                return;
+            }
+
+            items.forEach(item => {
+                if(item.id.videoId) {
+                    const videoUrl = `https://www.youtube.com/watch?v=${item.id.videoId}`;
+                    const title = item.snippet.title;
+                    const thumbnailUrl = item.snippet.thumbnails.high.url;
+
+                    const card = `
+                        <div class="video-card">
+                            <a href="${videoUrl}" target="_blank">
+                                <img src="${thumbnailUrl}" alt="${title}" class="video-thumbnail">
+                            </a>
+                            <div class="video-info">
+                                <h3 class="video-title">
+                                    <a href="${videoUrl}" target="_blank">${title}</a>
+                                </h3>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                }
+            });
+        }
+
+        // API কল করার মূল ফাংশন
+        function fetchVideos() {
+            // ১. চেক করা হচ্ছে ব্রাউজারে আগে থেকেই ডেটা সেভ করা আছে কিনা
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            const cachedTime = localStorage.getItem(CACHE_TIME_KEY);
+            const now = new Date().getTime();
+
+            // যদি ক্যাশ থাকে এবং তা ৬ ঘণ্টার কম পুরনো হয়, তবে API কল হবে না!
+            if (cachedData && cachedTime && (now - cachedTime < CACHE_DURATION)) {
+                console.log('Local Storage থেকে ডেটা লোড হয়েছে। API পয়েন্ট বেঁচে গেল!');
+                displayVideos(JSON.parse(cachedData));
+                return;
+            }
+
+            // ২. ক্যাশ না থাকলে নতুন করে API রিকোয়েস্ট পাঠানো হবে
+            console.log('API থেকে নতুন ডেটা আনা হচ্ছে...');
+            const apiUrl = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=6`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.items) {
+                        // নতুন ডেটা ব্রাউজারের স্টোরেজে সেভ করে রাখা হচ্ছে
+                        localStorage.setItem(CACHE_KEY, JSON.stringify(data.items));
+                        localStorage.setItem(CACHE_TIME_KEY, now.toString());
+                        
+                        displayVideos(data.items);
+                    } else {
+                        displayVideos([]);
+                    }
+                })
+                .catch(error => {
+                    console.error('API Error:', error);
+                    document.getElementById('video-container').innerHTML = '<p style="text-align:center;">ডেটা লোড করতে সমস্যা হয়েছে।</p>';
+                });
+        }
+
+        // পেজ লোড হলেই ফাংশনটি চালু হবে
+        fetchVideos();
+    </script>
+</body>
+</html>
