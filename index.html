@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Videos</title>
+    <style>
+        /* মোবাইল-বান্ধব গ্রিড ডিজাইন */
+        .video-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            padding: 10px;
+        }
+        .video-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .video-card img {
+            width: 100%;
+            height: auto;
+        }
+        .video-title {
+            padding: 10px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Latest Videos</h2>
+    <div id="videos" class="video-container"></div>
+
+    <script>
+        // আপনার ক্রেডেনশিয়াল এখানে বসান
+        const API_KEY = 'এখানে_আপনার_API_KEY_বসাবেন';
+        const CHANNEL_ID = 'এখানে_আপনার_চ্যানেল_ID_বসাবেন'; 
+        
+        // API URL তৈরি
+        const url = `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=5`;
+
+        // ডেটা ফেচ করা
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const videoContainer = document.getElementById('videos');
+                
+                // প্রতিটি ভিডিওর জন্য একটি করে কার্ড তৈরি করা
+                data.items.forEach(item => {
+                    if(item.id.videoId) {
+                        const videoCard = `
+                            <div class="video-card">
+                                <a href="https://www.youtube.com/watch?v=${item.id.videoId}" target="_blank">
+                                    <img src="${item.snippet.thumbnails.high.url}" alt="${item.snippet.title}">
+                                    <div class="video-title">${item.snippet.title}</div>
+                                </a>
+                            </div>
+                        `;
+                        videoContainer.innerHTML += videoCard;
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>
